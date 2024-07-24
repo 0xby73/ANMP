@@ -17,6 +17,7 @@ Across Network Messaging Protocol
   ./setup.sh
   ```
   - if you dont have the dependencies already installed
+
   This project requires the following dependencies:
   - make
   - g++
