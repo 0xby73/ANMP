@@ -17,21 +17,18 @@ Across Network Messaging Protocol
   - ncurses
 
   ### Installation
- To compile both the server and the client
+  - Makefile
   ```bash
-  make
+  make // To compile both the server and the client
   ```
-  To compile the server
   ```bash
-  make server
+  make server // To compile the server
   ```
-  To compile the client
   ```bash
-  make client
+  make client // To compile the client
   ```
-  To clean | To remove the compiled binaries
   ```bash
-  make clean
+  make clean // To clean / Remove the compiled binaries
   ```
 Then to run the server you run
 ```bash
