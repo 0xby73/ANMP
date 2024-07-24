@@ -6,6 +6,7 @@ Across Network Messaging Protocol
   - [Dependencies](#dependencies)
   - [Installation](#installation)
   - [Usage](#usage)
+- [License](LICENSE)
 
 ## Getting Started
 
@@ -30,15 +31,18 @@ Across Network Messaging Protocol
   ```bash
   make clean // To clean / Remove the compiled binaries
   ```
-Then to run the server you run
+  ### Usage
+  
+- To run the server you run
 ```bash
 ./server PORT
 ```
-Define the port to your needs
-
-For the client you run
+- To run the client you run
 ```bash
 ./client IP PORT
 ```
 Define the arguments to your needs
+
+- Enter your username when prompted then you'll be sent to the main room
+- Use !help to view the list of commands
 
