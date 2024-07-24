@@ -2,10 +2,10 @@
 Across Network Messaging Protocol
 
 ## Table of contents
-[Getting Started](#getting-started)
-- [Dependencies](#dependencies)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Getting Started](#getting-started)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Usage](#usage)
 
 ## Getting Started
 
@@ -33,4 +33,15 @@ Across Network Messaging Protocol
   ```bash
   make clean
   ```
+Then to run the server you run
+```bash
+./server PORT
+```
+Define the port to your needs
+
+For the client you run
+```bash
+./client IP PORT
+```
+Define the arguments to your needs
 
