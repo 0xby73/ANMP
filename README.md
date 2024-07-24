@@ -44,5 +44,5 @@ Across Network Messaging Protocol
 Define the arguments to your needs
 
 - Enter your username when prompted then you'll be sent to the main room
-- Use !help to view the list of commands
+- Use ```!help``` to view the list of commands
 
