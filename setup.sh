@@ -6,7 +6,7 @@ detect() {
     elif command -v pacman &> /dev/null; then
         echo "pacman"
     else
-        echo "unknown"
+        echo "setup.sh cant work on your system, please install the packages manually"
     fi
 }
 
