@@ -16,7 +16,7 @@ void broadcast(const std::string& msg, int clientsocket) noexcept {
     for (int client : clients) {
         if (client != clientsocket) {
             if (send(client, msg.c_str(), msg.size(), 0) == -1) {
-                std::cerr << "Error sending to client " << client << ". Error: " << strerror(errno) << std::endl;
+                std::cerr << "Error sending to client " << client << " Error: " << strerror(errno) << '\n';
             }
         }
     }
