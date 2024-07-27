@@ -1,5 +1,6 @@
 #include "netutils.h"
 #include "joinmsg.h"
+#include "ui.h"
 #include "colors.h"
 #include <iostream>
 #include <thread>
@@ -10,21 +11,36 @@
 #include <atomic>
 #include <errno.h>
 
+
 std::mutex mtx;
 std::atomic<bool> run(true);
 
+std::vector<std::string> messages;
 std::string username;
 
-static void sendmsg(int clientsocket) noexcept
+static void sendmsg(int clientsocket, WINDOW* input_win, WINDOW* chat_win) noexcept
 {
+  //std::vector<std::string> messages;
 
  while(run)
   {
+    wrefresh(input_win);
+    box(input_win);
+    mvwprintw(input_win, 1, 1, "%s- ", username.c_str());
+    wrefresh(input_win);
+
+  
+    std::string msg = getinp(input_win);
+
+    /*
+    box(input_win);
+    wrefresh(input_win);
+
     std::string msg;
 
     std::cout << username << "- ";    
     std::getline(std::cin, msg);
-    
+    */
     if (msg.empty())
     {
       continue;
@@ -33,9 +49,11 @@ static void sendmsg(int clientsocket) noexcept
     // I'm going to make the help command in its own header file in the future since it could get long
     if (msg == "!help")
     {
-      std::cout << "\n---------- HELP MENU ---------- \n"; // I'm also probably going to turn this into ascii later on
-      std::cout << BLUE << "!help - Displays the help menu\n" << RESET;
-      std::cout << BLUE << "!quit - gracefully disconnects the client <optimal way to quit>\n\n" << RESET;
+      messages.emplace_back("\n---------- HELP MENU ----------");
+      messages.emplace_back("!help - Displays the help menu");
+      messages.emplace_back("!quit - gracefully disconnects the client");
+      update(chat_win, messages, std::max(0, static_cast<int>(messages.size()) - (LINES - height - 1)));
+      continue;
     }
 
     if (msg == "!quit")
@@ -50,14 +68,22 @@ static void sendmsg(int clientsocket) noexcept
     msg = username + ": " + msg;
 
     send(clientsocket, msg.c_str(), msg.length(), 0);
+   
+    messages.emplace_back(msg);
+    update(chat_win, messages, std::max(0, static_cast<int>(messages.size()) - (LINES - height - 1)));
     
+    werase(input_win);
+    box(input_win);
+    mvwprintw(input_win, 1, 1, "%s- ", username.c_str());
+    wrefresh(input_win);
   }
   return;
 }
 
-static void recvmsg(int clientsocket) noexcept
+static void recvmsg(int clientsocket, WINDOW* chat_win) noexcept
 {
   char buffer[1024] = {0};
+  //std::vector<std::string> messages;
 
   while (run)
   {
@@ -66,7 +92,8 @@ static void recvmsg(int clientsocket) noexcept
       if (recvbytes > 0)
       {
         buffer[recvbytes] = '\0';
-        std::cout << buffer << '\n';
+        messages.emplace_back(buffer);
+        update(chat_win, messages, std::max(0, static_cast<int>(messages.size()) - (LINES - height - 1)));
       }
       else if (recvbytes == 0)
       {
@@ -133,10 +160,25 @@ int main(const int argc, char** argv)
   std::string joined = username + " has joined. ";
   send(clientsocket, joined.c_str(), joined.length(), 0);
 
-  std::thread recvthread(static_cast<void(*)(int)>(recvmsg), clientsocket);
-  std::thread sendthread(static_cast<void(*)(int)>(sendmsg), clientsocket);
+  // --ncurses--
+
+  startui();
+
+  int max_y, max_x;
+  getmaxyx(stdscr, max_y, max_x);
+
+  WINDOW* chat_win = newwin(max_y - height - 1, max_x, 0, 0);
+  WINDOW* input_win = newwin(height, max_x, max_y - height, 0);
+
+  scrollok(chat_win, TRUE);
+  box(input_win);
+  
+  // --ncurses--
+
+  std::thread recvthread(static_cast<void(*)(int, WINDOW*)>(recvmsg), clientsocket, chat_win);
+  std::thread sendthread(static_cast<void(*)(int, WINDOW*, WINDOW*)>(sendmsg), clientsocket, input_win, chat_win);
 
   recvthread.join();
   sendthread.join();
-
+  system("clear");
 }
