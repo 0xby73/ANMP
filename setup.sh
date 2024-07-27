@@ -35,4 +35,4 @@ if [[ $use_detected != [Yy]* ]]; then
 fi
 
 install $PM
-echo "Installation complete!"
+echo "Finished installation."
