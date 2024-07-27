@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -I. -Wno-unused-variable
+CXXFLAGS = -Wall -Wextra -I. -Wno-unused-variable -lncurses
 
 all: server client
 
