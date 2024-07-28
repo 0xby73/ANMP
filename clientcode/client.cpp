@@ -181,5 +181,4 @@ int main(const int argc, char** argv)
 
   recvthread.join();
   sendthread.join();
-  system("clear");
 }
